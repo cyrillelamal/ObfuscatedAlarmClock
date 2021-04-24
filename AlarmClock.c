@@ -22,7 +22,7 @@ unsigned char OFFOFF[6] = {0x4f, 0x46, 0x46, 0x4f, 0x46, 0x46};
 unsigned char ON[2] = {0x4f, 0x4e};
 unsigned char free;
 
-void taimer2(void) interrupt 5 using 3  // Second timer interruption
+void timer2(void) interrupt 5 using 3 // Second timer interruption
 {
 	TF2 = 0;
 	time++;
@@ -32,7 +32,7 @@ void taimer2(void) interrupt 5 using 3  // Second timer interruption
 	TR2 = 1;
 }
 
-void Delay(unsigned int DT)  // DTx100 microseconds - 0 timer
+void delay(unsigned int DT) // DTx100 microseconds - 0 timer
 {
 	unsigned int I;
 	TF0 = 0;
@@ -68,9 +68,9 @@ void sendToLCD(bit c0d1, unsigned char byteToSend)  //byteToSend: 0 - command, 1
 	RW = 0;
 	E = 1;
 	DATA = byteToSend;
-	Delay(1);
+	delay(1);
 	E = 0;
-	Delay(1);
+	delay(1);
 }
 
 void timeToLCD(void)
@@ -111,7 +111,7 @@ void timeToLCD(void)
 
 void prepareLCD(void)
 {
-	Delay(200);
+	delay(200);
 	sendToLCD(0, 0x30);
 	sendToLCD(0, 0x30);
 	sendToLCD(0, 0x37);
@@ -119,7 +119,7 @@ void prepareLCD(void)
 	sendToLCD(0, 0x06);
 	sendToLCD(0, 0x01);
 	sendToLCD(0, 0x00);
-	Delay(50);
+	delay(50);
 }
 
 void addSecond(void)
@@ -142,7 +142,7 @@ void addSecond(void)
 void SW1(void) interrupt 0 using 1  // Button interruption
 {
 	EX0 = 0;
-	Delay(50);
+	delay(50);
 	if(P3_2 == 0)
 	{
 		free = 0;
@@ -179,15 +179,15 @@ void setTime(void)
 {
 	AS = 0;
 	sendToLCD(0, 0x01);
-	Delay(40);
+	delay(40);
 	sendToLCD(0, 0x80);
 	for(i = 0; i < 3; i++)
 		sendToLCD(1, SET[i]);  // SET
 
-	Delay(30000);
+	delay(30000);
 	S1 = 0;
 	sendToLCD(0, 0x01);
-	Delay(40);
+	delay(40);
 	sendToLCD(0, 0x80);
 	timeToLCD();
 	while(S1 < 2)
@@ -254,12 +254,12 @@ void setAlarm(void)
 {
 	S1 = 0;
 	sendToLCD(0, 0x01);
-	Delay(40);
+	delay(40);
 	sendToLCD(0, 0x80);
 	for(i = 0; i < 2; i++)
 		sendToLCD(1, ON[i]);  // ON
 
-	Delay(30000);
+	delay(30000);
 	AS = 1;
 	timeToLCD();
 	while(S1 < 2)
@@ -305,14 +305,14 @@ void setAlarm(void)
 void enableAlarm(void)
 {
 	sendToLCD(0, 0x01);
-	Delay(40);
+	delay(40);
 	sendToLCD(0, 0x80);
 	for(i = 0; i < 3; i++)
 		sendToLCD(1, OFF[i]);
 
-	Delay(30000);
+	delay(30000);
 	sendToLCD(0, 0x01);
-	Delay(40);
+	delay(40);
 	sendToLCD(0, 0x80);
 	AS = 1;
 	timeToLCD();
@@ -378,12 +378,12 @@ void checkAlarm(void)
 void disableAlarm(void)
 {
 	sendToLCD(0, 0x01);
-	Delay(40);
+	delay(40);
 	sendToLCD(0, 0x80);
 	for(i = 0;  i < 2;  i++)
 		sendToLCD(1, ON[i]);
 
-	Delay(30000);
+	delay(30000);
 	S2 = 0;
 	S1 = 0;
 	AS = 1;
@@ -405,14 +405,14 @@ void disableAlarm(void)
 	{
 		alarmIsActivated = 0;
 		sendToLCD(0, 0x01);
-		Delay(40);
+		delay(40);
 		sendToLCD(0, 0x80);
 		for(i = 0; i < 6; i++)
 			sendToLCD(1, OFFOFF[i]);
 
-		Delay(30000);
+		delay(30000);
 		sendToLCD(0, 0x01);
-		Delay(40);
+		delay(40);
 		sendToLCD(0, 0x80);
 	}
 	AS = 0;
